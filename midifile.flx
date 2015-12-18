@@ -1,0 +1,39 @@
+class MidiFile {
+    private header midifile_h = '#include <MidiFile.h>'
+        requires package 'midifile';
+
+
+    type MidiEvent = 'MidiEvent*';
+    fun is_note_on: MidiEvent -> bool = '$1->isNoteOn()';
+    fun is_note_off: MidiEvent -> bool = '$1->isNoteOff()';
+    fun is_note: MidiEvent -> bool = '$1->isNote()';
+    fun is_linked: MidiEvent -> bool = '$1->isLinked()';
+
+    fun key_number: MidiEvent -> int = '$1->getKeyNumber()';
+    fun tick_duration: MidiEvent -> int = '$1->getTickDuration()';
+    fun tick: MidiEvent -> int = '$1->tick';
+    fun track: MidiEvent -> int = '$1->track';
+
+
+    type MidiEventList = 'MidiEventList' requires midifile_h;
+    fun subscript: MidiEventList * size -> MidiEvent = '&$1[$2]';
+
+
+    type MidiFile = 'MidiFile' requires midifile_h;
+    ctor MidiFile: unit = 'MidiFile()';
+    ctor MidiFile: string = 'MidiFile($1)';
+
+    gen read: MidiFile * string -> int = '$1.read($2)';
+    gen read(m: MidiFile)(f: string) => read (m, f);
+
+    proc link_note_pairs: MidiFile = '$1.linkNotePairs();';
+
+    fun ntracks: MidiFile -> int = '$1.getNumTracks()';
+    fun nevents: MidiFile * int -> int = '$1.getNumEvents($2)';
+    fun nevents(m: MidiFile)(t: int) => nevents (m, t);
+
+    fun ticks_per_quarter_note: MidiFile -> int = '$1.getTicksPerQuarterNote()';
+    fun tpq: MidiFile -> int = '$1.getTPQ()';
+
+    fun subscript: MidiFile * size -> MidiEventList = '$1[$2]';
+}

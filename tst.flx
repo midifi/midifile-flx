@@ -1,0 +1,24 @@
+#!/usr/bin/env flxrun
+//flxrun:--pkgconfig-path+=. -I/media/ryan/stuff/midifile/include -L/media/ryan/stuff/midifile/lib --static
+
+include 'midifile';
+
+open MidiFile;
+
+fun f(m: MidiFile::MidiFile) => m;
+
+midi := f$ #MidiFile;
+s := midi.read '/home/ryan/Documents/piano_req.midi.mid';
+assert s != 0;
+midi.link_note_pairs;
+for var track in 0 upto midi.ntracks - 1 do
+    println$ f"Track %d" track;
+    for var event in 0 upto (midi.nevents track) - 1 do
+        evt := midi.[track.size].[event.size];
+        if evt.is_note_on and evt.is_linked perform
+            println$ f"Note %d on %d for %d" (evt.key_number, evt.tick,
+                                              evt.tick_duration);
+    done
+done
+
+println$ f"(%d tracks)" midi.ntracks;

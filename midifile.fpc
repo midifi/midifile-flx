@@ -1,0 +1,4 @@
+Name: midifile
+Description: Felix bindings for MidiFile.
+provides_dlib: -lmidifile
+provides_slib: -lmidifile
