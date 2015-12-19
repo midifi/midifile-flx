@@ -11,29 +11,38 @@ class MidiFile {
 
     fun key_number: MidiEvent -> int = '$1->getKeyNumber()';
     fun tick_duration: MidiEvent -> int = '$1->getTickDuration()';
+    fun duration_in_seconds: MidiEvent -> double = '$1->getDurationInSeconds()';
     fun tick: MidiEvent -> int = '$1->tick';
     fun track: MidiEvent -> int = '$1->track';
+    fun seconds: MidiEvent -> double = '$1->seconds';
 
 
     type MidiEventList = 'MidiEventList' requires midifile_h;
     fun subscript: MidiEventList * size -> MidiEvent = '&$1[$2]';
 
 
-    type MidiFile = 'MidiFile' requires midifile_h;
-    ctor MidiFile: unit = 'MidiFile()';
-    ctor MidiFile: string = 'MidiFile($1)';
+    type MidiFile = 'MidiFile*' requires midifile_h;
+    ctor MidiFile: unit = 'new MidiFile()';
+    ctor MidiFile: string = 'new MidiFile($1)';
 
-    gen read: MidiFile * string -> int = '$1.read($2)';
+    gen read: MidiFile * string -> int = '$1->read($2)';
     gen read(m: MidiFile)(f: string) => read (m, f);
 
-    proc link_note_pairs: MidiFile = '$1.linkNotePairs();';
+    proc link_note_pairs: MidiFile = '$1->linkNotePairs();';
+    proc do_time_analysis: MidiFile = '$1->doTimeAnalysis();';
 
-    fun ntracks: MidiFile -> int = '$1.getNumTracks()';
-    fun nevents: MidiFile * int -> int = '$1.getNumEvents($2)';
+    fun ntracks: MidiFile -> int = '$1->getNumTracks()';
+    fun nevents: MidiFile * int -> int = '$1->getNumEvents($2)';
     fun nevents(m: MidiFile)(t: int) => nevents (m, t);
 
-    fun ticks_per_quarter_note: MidiFile -> int = '$1.getTicksPerQuarterNote()';
-    fun tpq: MidiFile -> int = '$1.getTPQ()';
+    fun ticks_per_quarter_note: MidiFile -> int = '$1->getTicksPerQuarterNote()';
+    fun tpq: MidiFile -> int = '$1->getTPQ()';
 
-    fun subscript: MidiFile * size -> MidiEventList = '$1[$2]';
+    fun time_in_seconds: MidiFile * int -> double = '$1->getTimeInSeconds($2)';
+    fun time_in_seconds: MidiFile * int * int -> double =
+        '$1->getTimeInSeconds($2, $3)';
+    /* fun time_in_seconds(m: MidiFile)(t: int) => time_in_seconds (m, t); */
+    fun time_in_seconds(m: MidiFile)(t: int, i: int) => time_in_seconds (m, t, i);
+
+    fun subscript: MidiFile * size -> MidiEventList = '(*$1)[$2]';
 }
