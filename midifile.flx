@@ -7,6 +7,7 @@ class MidiFile {
     fun is_note_on: MidiEvent -> bool = '$1->isNoteOn()';
     fun is_note_off: MidiEvent -> bool = '$1->isNoteOff()';
     fun is_note: MidiEvent -> bool = '$1->isNote()';
+    fun is_meta: MidiEvent -> bool = '$1->isMeta()';
     fun is_linked: MidiEvent -> bool = '$1->isLinked()';
 
     fun key_number: MidiEvent -> int = '$1->getKeyNumber()';
@@ -15,6 +16,8 @@ class MidiFile {
     fun tick: MidiEvent -> int = '$1->tick';
     fun track: MidiEvent -> int = '$1->track';
     fun seconds: MidiEvent -> double = '$1->seconds';
+
+    fun subscript: MidiEvent * size -> utiny = '(*$1)[$2]';
 
 
     type MidiEventList = 'MidiEventList' requires midifile_h;

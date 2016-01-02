@@ -8,7 +8,8 @@ open MidiFile;
 fun f(m: MidiFile::MidiFile) => m;
 
 midi := f$ #MidiFile;
-s := midi.read '/home/ryan/Documents/piano_req.midi.mid';
+if System::argc != 2 perform halt 'invalid number of arguments';
+s := midi.read$ System::argv 1;
 assert s != 0;
 midi.link_note_pairs;
 for var track in 0 upto midi.ntracks - 1 do
@@ -21,4 +22,4 @@ for var track in 0 upto midi.ntracks - 1 do
     done
 done
 
-println$ f"(%d tracks)" midi.ntracks;
+println$ f"(%d tracks, %d tpq)" (midi.ntracks, midi.tpq);
